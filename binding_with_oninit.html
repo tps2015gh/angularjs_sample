@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+<body>
+<!--
+@author    thitipong.s.th
+@language  javascript/vanilla
+@library   angularJS  1.6.9
+@date	   24 / 10 / 2020 
+@language  english , thai 
+@editor    w3schools.com online editor 
+-->
+<style>
+h1 {border:1px solid green;background-color:lightyellow;}
+h1.green {border:1px solid green;background-color:lightgreen;color:blue;}
+.green  {border:1px solid green;background-color:lightgreen;color:blue;}
+.yellow  {background-color:lightyellow;}
+.blue  {background-color:lightblue;}
+.text-red  {color:red;}
+.border-green2 {border:2px solid green;}
+.pad2    {padding:2px;}
+.mb-10    {margin-bottom:10px;}
+.mt-10    {margin-top:10px;}
+</style>
+<script>
+var app = angular.module('myApp', []);
+app.controller('myCtrl', function($scope) {
+    $scope.firstName = "John";
+    $scope.lastName = "Doe";
+    $scope.r  = 1 ; 
+    $scope.show_calc = false;
+});
+
+function fn_sum(){
+    		var ctrl = this;
+            ctrl.stack  = [];
+            ctrl.stack.push(" set ctrl.num = 5 ")
+            ctrl.num = 5 ; 
+            ctrl.sumval = 0; 
+            ctrl.$onInit =  function(){ 
+            	ctrl.stack.push("Enter $onInit , since AngularJS 1.5+ ")
+            	ctrl.num = ctrl.cnt;
+                ctrl.stack.push("after set (ctrl variable )num = (ctrl bining)cnt")
+                var sumval = 0 ;
+                for(var i = 0 ;i < ctrl.num ; i++){
+                	ctrl.stack.push("cal sum loop i = " + i )
+                	sumval = sumval + ctrl.array[i];
+                }
+                ctrl.sumval = sumval ;
+            }
+            ctrl.stack.push("ctrl.cnt == " + ctrl.cnt)
+            ctrl.stack.push("set num = ctrl.cnt (undefined) still not init binding")
+            ctrl.num = ctrl.cnt;
+            ctrl.stack.push("set num = 4 ")
+            ctrl.num = 4;
+            ctrl.exp_val = "init..";
+            ctrl.export = function(){
+            	  //alert( 123 ) ;
+            	  ctrl.exp_val = "TRY EXPORT DATA .... ";
+                  try{ 
+                    var arr  =  []; 
+                    var solve = "" ;
+                    var solvesum = 0; 
+                    for(var i=0 ;i < ctrl.cnt; i++){
+                       arr.push(ctrl.array[i]);
+                       solve = solve + "+" + ctrl.array[i];
+                       solvesum +=  ctrl.array[i];
+                    }
+                    var pack = {arr:arr , cnt: ctrl.cnt }
+                    pack.num = ctrl.num; 
+                    pack.solve = solve + " = " + solvesum  ; 
+                    var json = JSON.stringify( pack );
+                    ctrl.exp_val = json
+                  }catch(err){
+                  	ctrl.exp_val = err;
+                  }
+            }
+}
+app.component("sum",{
+    template: "<div class='green pad2 mb-10'>array={{$ctrl.array}}"
+    		+"<br>cnt={{$ctrl.cnt}}" 
+    		+"<br>num={{$ctrl.num}}  " 
+            + "<br>sumval=<b>{{$ctrl.sumval}}</b>"
+            + "<div ng-show='$ctrl.showcalc' class='yellow pad2'>stack การคำนวณ:" 
+            + "<div ng-repeat='str in $ctrl.stack'>{{str}}</div>" 
+    		+ "</div>"
+            + "</div>"
+    ,controller: fn_sum
+    ,bindings: {
+    	'array': '<',
+        'cnt' : '<' ,
+        'showcalc':'<' 
+    }
+});
+app.component("sumBlue",{
+    template: "<div class='blue border-green2 pad2'>array={{$ctrl.array}}"
+    		+"<br>cnt={{$ctrl.cnt}}" 
+    		+"<br>num={{$ctrl.num}}" 
+            + "<br>sumval=<b>{{$ctrl.sumval}}</b>"
+            + "<div ng-show='$ctrl.showcalc' class='yellow pad2'>stack การคำนวณ:" 
+            + "<div ng-repeat='str in $ctrl.stack'>{{str}}</div>" 
+    		+ "</div><br>"
+            + "<button ng-click=\"$ctrl.export();\" class='mt-10'> Exort/Save </button>"
+            + "<div ng-init=\"$ctrl.exp_val='none'\">"
+            +   "Export_value: <br><b class='text-red yellow pad2'>{{$ctrl.exp_val}}</b></div>" 
+            + "</div>"
+    ,controller: fn_sum
+    ,bindings: {
+    	'array': '<',
+        'cnt' : '<' ,
+        'showcalc':'<' 
+    }
+});
+
+</script>
+
+<div ng-app="myApp" ng-controller="myCtrl">
+
+@1
+<h1> Test AngularJS 1.6 Component set value from binding with $onInit() , export loop with that value </h1>
+<input type="checkbox" ng-model="show_calc">
+	<span class="text_red" >Show Calculation (แสดงการคำนวณ,คลิกเพื่อซ่อนหรือแสดงผลการคำนวณ) </span>
+    
+<sum array="[1,2,3,4,5,6]" cnt="3" showcalc="show_calc" ></sum>
+<div ng-repeat="cntx in [2,3,4,5,6]">
+     <h2>ผลรวม {{cntx}} ช่องแรก</h2> 
+    <sum-blue array="[1,2,3,4,5,6]" cnt="cntx" showcalc="show_calc" ></sum-blue>
+    <br>
+</div> 
+ 
+
+@2 {{1+2}}
+</div>
+122
+
+
+
+</body>
+</html>
